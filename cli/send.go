@@ -56,16 +56,8 @@ var sendCmd = &cli.Command{
 			Name:  "params-hex",
 			Usage: "specify invocation parameters in hex",
 		},
-		&cli.BoolFlag{
-			Name:  "force",
-			Usage: "Deprecated: use global 'force-send'",
-		},
 	},
 	Action: func(cctx *cli.Context) error {
-		if cctx.IsSet("force") {
-			fmt.Println("'force' flag is deprecated, use global flag 'force-send'")
-		}
-
 		if cctx.Args().Len() != 2 {
 			return ShowHelp(cctx, fmt.Errorf("'send' expects two arguments, target and amount"))
 		}

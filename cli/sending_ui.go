@@ -24,7 +24,7 @@ import (
 func InteractiveSend(ctx context.Context, cctx *cli.Context, srv ServicesAPI,
 	proto *api.MessagePrototype) (*types.SignedMessage, error) {
 
-	msg, checks, err := srv.PublishMessage(ctx, proto, cctx.Bool("force") || cctx.Bool("force-send"))
+	msg, checks, err := srv.PublishMessage(ctx, proto, cctx.Bool("force-send"))
 	printer := cctx.App.Writer
 	if xerrors.Is(err, ErrCheckFailed) {
 		if !cctx.Bool("interactive") {
