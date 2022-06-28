@@ -122,6 +122,15 @@ func GetActorCodeID(av Version, name string) (cid.Cid, bool) {
 	return c, ok
 }
 
+// GetActorCodeIDs looks up a builtin actor's code CID by actor version.
+func GetActorCodeIDs(av Version) (map[string]cid.Cid, bool) {
+	manifestMx.RLock()
+	defer manifestMx.RUnlock()
+
+	cids, ok := manifests[av]
+	return cids, ok
+}
+
 func GetActorMetaByCode(c cid.Cid) (string, Version, bool) {
 	manifestMx.RLock()
 	defer manifestMx.RUnlock()

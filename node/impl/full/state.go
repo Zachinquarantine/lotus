@@ -1468,25 +1468,26 @@ func (a *StateAPI) StateActorCodeCIDs(ctx context.Context, nv network.Version) (
 		return nil, xerrors.Errorf("invalid network version")
 	}
 
-	cids := make(map[string]cid.Cid)
-
-	manifestCid, ok := actors.GetManifest(actorVersion)
+	cids, ok := actors.GetActorCodeIDs(actorVersion)
 	if !ok {
-		return nil, xerrors.Errorf("cannot get manifest CID")
+		return nil, xerrors.Errorf("could not find cids for network version %d, actors version %d", nv, actorVersion)
 	}
 
-	cids["_manifest"] = manifestCid
-
-	var actorKeys = actors.GetBuiltinActorsKeys()
-	for _, name := range actorKeys {
-		actorCID, ok := actors.GetActorCodeID(actorVersion, name)
-		if !ok {
-			return nil, xerrors.Errorf("didn't find actor %v code id for actor version %d", name,
-				actorVersion)
-		}
-		cids[name] = actorCID
-	}
 	return cids, nil
+}
+
+func (a *StateAPI) StateActorManifestCID(ctx context.Context, nv network.Version) (cid.Cid, error) {
+	actorVersion, err := actors.VersionForNetwork(nv)
+	if err != nil {
+		return cid.Undef, xerrors.Errorf("invalid network version")
+	}
+
+	c, ok := actors.GetManifest(actorVersion)
+	if !ok {
+		return cid.Undef, xerrors.Errorf("could not find manifest cid for network version %d, actors version %d", nv, actorVersion)
+	}
+
+	return c, nil
 }
 
 func (a *StateAPI) StateGetRandomnessFromTickets(ctx context.Context, personalization crypto.DomainSeparationTag, randEpoch abi.ChainEpoch, entropy []byte, tsk types.TipSetKey) (abi.Randomness, error) {

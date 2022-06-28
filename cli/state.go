@@ -1927,6 +1927,11 @@ var StateSysActorCIDsCmd = &cli.Command{
 		}
 		fmt.Printf("Actor Version: %d\n", actorVersion)
 
+		manifestCid, ok := actors.GetManifest(actorVersion)
+		if ok {
+			fmt.Printf("Manifest CID: %v\n", manifestCid)
+		}
+
 		tw := tabwriter.NewWriter(os.Stdout, 2, 4, 2, ' ', 0)
 		_, _ = fmt.Fprintln(tw, "\nActor\tCID\t")
 
